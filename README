@@ -1,0 +1,74 @@
+This is an optical flow estimator using Java and OpenCL
+
+Dependencies:
+	Java 	7
+	JOCL 	>0.2.0-RC		http://www.jocl.org/
+							Version 0.2.0-RC is included in the /libs folder for convenience
+	OpenCL	>1.2			Various websites for different distributions:
+							AMD - http://support.amd.com/en-us/kb-articles/Pages/OpenCL2-Driver.aspx
+							NVIDIA - https://developer.nvidia.com/opencl
+							APPLE - https://developer.apple.com/opencl/
+							INTEL - https://software.intel.com/en-us/intel-opencl
+							
+Eclipse Setup Instructions:
+	1. Import the CLFlow directory into Eclipse as existing code
+	2. Move the appropriate library (.dll or .so) file from the lib directory
+		to a system path (recommended) or to the CLFlow directory
+	3. Compile and run
+	
+Non-Eclipse Instructions:
+	1. Compile all java files in src/flow into class files and
+		put them into the bin/flow directory
+	2. Same as above
+	3. done!
+	
+	
+Usage instructions:
+	<Program> [--cl-info ][--platform-num <#> ][--device-num <#> ][--calculate-error ]
+		[--output-flow ][--output-flow-image ][--output-sequence <#>][--all ]
+		[folder1 folder2 folder3...]
+		
+	--cl-info:
+		Displays the platforms and associated devices and immediately quits
+	
+	--platform-num:
+		Sets the platform num (e.g. if you have AMD and Intel platform)
+		default is 0
+		
+	--device-num:
+		Sets the device num (e.g. if you have 2 devices on the same platform)
+		default is 0
+		
+	--calculate-error:
+		Display the AEPE for each image folder containing a flow10.flo file
+		containing the ground truth
+		
+	--output-flow:
+		Output uv.flo with the float values of the calculated flow for each folder
+		see http://vision.middlebury.edu/flow/submit/
+		
+	--output-flow-image:
+		Output UV.png with a color coded flow image for each folder
+		
+	--output-sequence:
+		Output n images interpolated between the left and write frame
+		
+	--all:
+		process all folders in ./Images/
+		Cannot be used when folders are specified
+		
+	folder1 folder2 folder3...
+		list of folders in the ./Images directory to process
+		Each folder must have a Frame10.png or Frame10.jpg and
+			a Frame11.png or Frame11.jpg within
+			
+Examples:
+
+	java -cp "bin;libs/JOCL-0.2.0RC.jar" flow.Driver Urban2 --output-sequence 4 --output-flow
+		Output a 4 image sequence and a .flo file for the Urban2 folder
+		
+	java -cp "bin;libs/JOCL-0.2.0RC.jar" flow.Driver --cl-info
+		Output the platforms and devices
+		
+	java -cp "bin;libs/JOCL-0.2.0RC.jar" flow.Driver --all --output-flow-image
+		Outputs a .png for each image folder
